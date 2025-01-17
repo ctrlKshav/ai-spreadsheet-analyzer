@@ -40,19 +40,33 @@ client = Groq(
 def parse_llm_response(response: str) -> tuple:
     """Parse the LLM response to extract city and YOE."""
     try:
+        # Basic validation - check if response has expected format
+        if not ('city' in response.lower() and 'yoe' in response.lower()):
+            return "NA", "NA"
+            
         parts = [p.strip() for p in response.split(',')]
+        
+        # Extract city
         city_part = next((p for p in parts if 'city' in p.lower()), '')
-        city = city_part.split(':')[1].strip() if ':' in city_part else None
+        city = city_part.split(':')[1].strip() if ':' in city_part else "NA"
+        # Clean up city value
+        city = "NA" if city.lower() in ['null', 'na', ''] else city
+        
+        # Extract YOE
         yoe_part = next((p for p in parts if 'yoe' in p.lower()), '')
-        yoe = yoe_part.split(':')[1].strip() if ':' in yoe_part else None
+        yoe = yoe_part.split(':')[1].strip() if ':' in yoe_part else "NA"
+        
+        # Convert YOE to float if possible
         try:
-            yoe = float(yoe) if yoe and yoe.lower() != 'null' else None
+            yoe = float(yoe) if yoe and yoe.lower() not in ['null', 'na'] else "NA"
         except ValueError:
-            yoe = None
+            yoe = "NA"
+            
         return city, yoe
+        
     except Exception as e:
         print(f"Error parsing response: {str(e)}")
-        return None, None
+        return "NA", "NA"
 
 def save_checkpoint(df: pd.DataFrame, filename: str, checkpoint_number: int):
     """Save progress checkpoint."""
