@@ -5,14 +5,28 @@ import pandas as pd
 import os
 from typing import List
 import time
+import json
+import tempfile
 
-from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_docling import DoclingLoader
+
+import google.generativeai as genai
+
+genai.configure(api_key="AIzaSyBTnYPIUOhSvGn8Rc8E9P-r2cmHE2LWys4")
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    system_instruction="""
+        You are a precise data extraction assistant. You must:
+        - Return only in the specified format
+        - Never calculate years of experience that exceed realistic bounds
+        - Return 'NA' when information is unclear or uncertain
+        """,
+    )
 
 app = FastAPI()
 
@@ -26,16 +40,10 @@ app.add_middleware(
 
 UPLOAD_DIR = "uploads"
 OUTPUT_DIR = "processed"
-RESUME_DIR = "resumes"
 CHECKPOINT_DIR = "checkpoints"  # Directory for saving progress
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(RESUME_DIR, exist_ok=True)
 os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY"),
-)
 
 def parse_llm_response(response: str) -> tuple:
     """Parse the LLM response to extract city and YOE."""
@@ -78,6 +86,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
     Upload CSV, extract resume links, process resumes, and create enriched CSV.
     Saves progress incrementally and can resume from checkpoints.
     """
+    
     try:
         total_start_time = time.time()
         file_path = os.path.join(UPLOAD_DIR, file.filename)
@@ -112,6 +121,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         extracted_data = []
         timing_data = []
         checkpoint_interval = 10  # Save every 10 processed resumes
+       
         
         for index, link in enumerate(resume_links[start_index:], start=start_index):
             try:
@@ -128,75 +138,68 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 pages = loader.load_and_split()
                 loading_time = time.time() - start_time
-
-                # # Write pages to a text file
-                # text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
-                # with open(text_file_path, "w") as text_file:
-                #     for page in pages:
-                #         text_file.write(page.page_content + "\n")
-                # print(f"Pages written to {text_file_path}")
-                
                 print(f"Loading time: {loading_time:.2f} seconds")
                 
-                # Process with LLM
                 llm_start_time = time.time()
-                chat_completion = client.chat.completions.create(
-                    messages=[
+
+                chat = model.start_chat()
+
+                prompt = f"""Extract the current city and years of experience (YOE) from the Input text using these rules:
+
+                For City:
+                1. Extract the current city of residence
+                2. Look for keywords like "current location", "residing in", "based in"
+                3. If multiple cities, prioritize the one associated with current job/residence
+                4. If no clear current city, return 'NA'
+
+                For Years of Experience (YOE):
+                1. Calculate based on explicit work history dates
+                2. For freshers/recent graduates with no prior experience, return 0
+                3. If work history shows less than 1 year, round to nearest 0.5
+                4. Return 'NA' if:
+                - Dates are unclear or conflicting
+                - Calculated experience exceeds (2025 - graduation_year - 18)
+                - Experience seems unrealistic (>40 years)
+                5. Don't include:
+                - Internships unless explicitly stated as work experience
+                - Education period as experience
+                - Overlapping job periods multiple times
+
+                The current year is 2025.
+                Strictly return in this format without any other text:
+                city : <city_name/NA>, yoe : <number/NA>
+
+                Input text:
+                {pages}
+                """
+
+                # Setting up the initial context with system message
+                chat = model.start_chat(
+                    history=[
                         {
-                            "role": "system",
-                            "content": """You are a precise data extraction assistant. You must:
-                    - Return only in the specified format
-                    - Return 'NA' when information is unclear or uncertain"""
-                        },
-                        {
-                            "role": "user",
-                            "content": f"""
-                    Extract the current city and years of experience (YOE) from the Input text using these rules:
-
-                    For City:
-                    1. Extract the current city of residence
-                    2. Look for keywords like "current location", "residing in", "based in"
-                    3. If multiple cities, prioritize the one associated with current job/residence
-                    4. If no clear current city, return 'NA'
-
-                    For Years of Experience (YOE):
-                    1. Calculate based on explicit work history dates
-                    2. For freshers/recent graduates with no prior experience, return 0
-                    3. If work history shows less than 1 year, round to nearest 0.5
-                    4. Return 'NA' if:
-                    - Dates are unclear or conflicting
-                    - Calculated experience exceeds (2025 - graduation_year - 18)
-                    - Experience seems unrealistic (>40 years)
-                    5. Don't include:
-                    - Internships unless explicitly stated as work experience
-                    - Education period as experience
-                    - Overlapping job periods multiple times
-
-                    The current year is 2025.
-                    Strictly return in this format without any other text:
-                    city : <city_name/NA>, yoe : <number/NA>
-
-                    Input text:
-                    {pages}
-                    """
+                            "role": "model", 
+                            "parts": ["I am a precise data extraction assistant. I will return only in the specified format and use 'NA' when information is unclear or uncertain."]
                         }
-                    ],
-                    model="llama-3.1-8b-instant",
+                    ]
                 )
+
+                # Sending the actual prompt
+                response = chat.send_message(prompt)
+                print(response.text)
 
                 processing_time = time.time() - llm_start_time
                 print(f"LLM processing time: {processing_time:.2f} seconds")
                 
-                response = chat_completion.choices[0].message.content
-                city, yoe = parse_llm_response(response)
+                # response = chat_completion.choices[0].message.content
+                # city, yoe = parse_llm_response(response)
                 
-                # Update DataFrame and save immediately
-                df.loc[df['resumelink'] == link, 'city'] = city
-                df.loc[df['resumelink'] == link, 'years_of_experience'] = yoe
+                # # Update DataFrame and save immediately
+                # df.loc[df['resumelink'] == link, 'city'] = city
+                # df.loc[df['resumelink'] == link, 'years_of_experience'] = yoe
                 
                 # Save checkpoint at intervals
-                if (index + 1) % checkpoint_interval == 0:
-                    save_checkpoint(df, file.filename, index + 1)
+                # if (index + 1) % checkpoint_interval == 0:
+                #     save_checkpoint(df, file.filename, index + 1)
                 
                 timing_info = {
                     "resume_no": index + 1,
@@ -208,9 +211,9 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 extracted_data.append({
                     "resume_no": index + 1,
-                    "data": response,
-                    "parsed_city": city,
-                    "parsed_yoe": yoe,
+                    # "data": response,
+                    # "parsed_city": city,
+                    # "parsed_yoe": yoe,
                     "timing": timing_info
                 })
 
@@ -254,7 +257,6 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-#Testing Function
 @app.get("/ask-llm")
 async def ask_llm():
     print("Hello endpoint") 
