@@ -5,14 +5,30 @@ import pandas as pd
 import os
 from typing import List
 import time
-
-from groq import Groq
+from enum import Enum
+import google.generativeai as genai
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_docling import DoclingLoader
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_docling import DoclingLoader
+class GeminiProvider(Enum):
+    KEY_A = "A"
+    KEY_B = "B"
+    KEY_C = "C"
+    KEY_D = "D"
+
+# Initialize API configurations for each key
+gemini_clients = {}
+for key in GeminiProvider:
+    env_key = f"GEMINI_API_KEY_{key.value}"
+    api_key = os.getenv(env_key)
+    if api_key:
+        gemini_clients[key] = genai.GenerativeModel('gemini-1.5-flash')
+        genai.configure(api_key=api_key)
+    else:
+        print(f"Warning: {env_key} not found in environment variables")
 
 app = FastAPI()
 
@@ -24,39 +40,79 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Directory setup
 UPLOAD_DIR = "uploads"
 OUTPUT_DIR = "processed"
 RESUME_DIR = "resumes"
-CHECKPOINT_DIR = "checkpoints"  # Directory for saving progress
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(RESUME_DIR, exist_ok=True)
-os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+CHECKPOINT_DIR = "checkpoints"
+for directory in [UPLOAD_DIR, OUTPUT_DIR, RESUME_DIR, CHECKPOINT_DIR]:
+    os.makedirs(directory, exist_ok=True)
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY"),
-)
+def get_next_provider(current_index: int) -> GeminiProvider:
+    """Rotate between the four Gemini API keys."""
+    providers = list(GeminiProvider)
+    return providers[current_index % len(providers)]
+
+async def process_with_gemini(pages: str, provider: GeminiProvider) -> tuple[str, GeminiProvider]:
+    """Process text with specified Gemini API key."""
+    api_key = os.getenv(f"GEMINI_API_KEY_{provider.value}")
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-pro')
+    
+    prompt = f"""
+    Extract the current city and years of experience (YOE) from the Input text using these rules:
+
+    For City:
+    1. Extract the current city of residence
+    2. Look for keywords like "current location", "residing in", "based in"
+    3. If multiple cities, prioritize the one associated with current job/residence
+    4. If no clear current city, return 'NA'
+
+    For Years of Experience (YOE):
+    1. Calculate based on explicit work history dates
+    2. For freshers/recent graduates with no prior experience, return 0
+    3. If work history shows less than 1 year, round to nearest 0.5
+    4. Return 'NA' if:
+    - Dates are unclear or conflicting
+    - Calculated experience exceeds (2025 - graduation_year - 18)
+    - Experience seems unrealistic (>40 years)
+    5. Don't include:
+    - Internships unless explicitly stated as work experience
+    - Education period as experience
+    - Overlapping job periods multiple times
+
+    The current year is 2025.
+    Strictly return in this format without any other text:
+    city : <city_name/NA>, yoe : <number/NA>
+
+    Input text:
+    {pages}
+    """
+    
+    try:
+        response = model.generate_content(prompt)
+        return response.text, provider
+    except Exception as e:
+        print(f"Error with key {provider.value}: {str(e)}")
+        # Try next provider
+        next_provider = GeminiProvider((list(GeminiProvider).index(provider) + 1) % len(GeminiProvider))
+        return await process_with_gemini(pages, next_provider)
 
 def parse_llm_response(response: str) -> tuple:
     """Parse the LLM response to extract city and YOE."""
     try:
-        # Basic validation - check if response has expected format
         if not ('city' in response.lower() and 'yoe' in response.lower()):
             return "NA", "NA"
             
         parts = [p.strip() for p in response.split(',')]
         
-        # Extract city
         city_part = next((p for p in parts if 'city' in p.lower()), '')
         city = city_part.split(':')[1].strip() if ':' in city_part else "NA"
-        # Clean up city value
         city = "NA" if city.lower() in ['null', 'na', ''] else city
         
-        # Extract YOE
         yoe_part = next((p for p in parts if 'yoe' in p.lower()), '')
         yoe = yoe_part.split(':')[1].strip() if ':' in yoe_part else "NA"
         
-        # Convert YOE to float if possible
         try:
             yoe = float(yoe) if yoe and yoe.lower() not in ['null', 'na'] else "NA"
         except ValueError:
@@ -76,10 +132,7 @@ def save_checkpoint(df: pd.DataFrame, filename: str, checkpoint_number: int):
 
 @app.post("/process_file")
 async def process_file_and_extract_links(file: UploadFile = File(...)):
-    """
-    Upload CSV, extract resume links, process resumes, and create enriched CSV.
-    Saves progress incrementally and can resume from checkpoints.
-    """
+    """Process file with rotating Gemini API keys."""
     try:
         total_start_time = time.time()
         file_path = os.path.join(UPLOAD_DIR, file.filename)
@@ -89,7 +142,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
             realfile = await file.read()
             buffer.write(realfile)
         
-        # Read the input file
+        # Read input file
         if file.filename.endswith(".csv"):
             df = pd.read_csv(file_path, on_bad_lines="skip")
         elif file.filename.endswith((".xls", ".xlsx")):
@@ -100,16 +153,15 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         if "resumelink" not in df.columns:
             raise HTTPException(status_code=400, detail="CSV must contain 'resumelink' column.")
 
-        start_index = 0
         df['city'] = None
         df['years_of_experience'] = None
 
         resume_links = df["resumelink"].dropna().tolist()
         extracted_data = []
         timing_data = []
-        checkpoint_interval = 10  # Save every 10 processed resumes
+        checkpoint_interval = 10
         
-        for index, link in enumerate(resume_links[start_index:], start=start_index):
+        for index, link in enumerate(resume_links):
             try:
                 print(f"\nProcessing resume {index + 1}/{len(resume_links)}: {link}")
                 start_time = time.time()
@@ -124,77 +176,34 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 pages = loader.load_and_split()
                 loading_time = time.time() - start_time
-                print(f"Loading time: {loading_time:.2f} seconds")
                 
-                #    # # Write pages to a text file
+                # Write pages to a text file
                 # text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
                 # with open(text_file_path, "w") as text_file:
                 #     for page in pages:
                 #         text_file.write(page.page_content + "\n")
                 # print(f"Pages written to {text_file_path}")
                 
-                # Process with LLM
+                # Process with rotating API keys
+                provider = get_next_provider(index)
                 llm_start_time = time.time()
-                chat_completion = client.chat.completions.create(
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": """You are a precise data extraction assistant. You must:
-                    - Return only in the specified format
-                    - Return 'NA' when information is unclear or uncertain"""
-                        },
-                        {
-                            "role": "user",
-                            "content": f"""
-                    Extract the current city and years of experience (YOE) from the Input text using these rules:
-
-                    For City:
-                    1. Extract the current city of residence
-                    2. Look for keywords like "current location", "residing in", "based in"
-                    3. If multiple cities, prioritize the one associated with current job/residence
-                    4. If no clear current city, return 'NA'
-
-                    For Years of Experience (YOE):
-                    1. Calculate based on explicit work history dates
-                    2. For freshers/recent graduates with no prior experience, return 0
-                    3. If work history shows less than 1 year, round to nearest 0.5
-                    4. Return 'NA' if:
-                    - Dates are unclear or conflicting
-                    - Calculated experience exceeds (2025 - graduation_year - 18)
-                    - Experience seems unrealistic (>40 years)
-                    5. Don't include:
-                    - Internships unless explicitly stated as work experience
-                    - Education period as experience
-                    - Overlapping job periods multiple times
-
-                    The current year is 2025.
-                    Strictly return in this format without any other text:
-                    city : <city_name/NA>, yoe : <number/NA>
-
-                    Input text:
-                    {pages}
-                    """
-                        }
-                    ],
-                    model="llama-3.1-8b-instant",
-                )
-
+                
+                response, used_provider = await process_with_gemini(str(pages), provider)
                 processing_time = time.time() - llm_start_time
-                print(f"LLM processing time: {processing_time:.2f} seconds")
                 
-                response = chat_completion.choices[0].message.content
                 city, yoe = parse_llm_response(response)
+                print("\n", city, yoe)
                 
-                # Update DataFrame and save immediately
+                # Update DataFrame
                 df.loc[df['resumelink'] == link, 'city'] = city
                 df.loc[df['resumelink'] == link, 'years_of_experience'] = yoe
                 
-                # Save checkpoint at intervals
                 if (index + 1) % checkpoint_interval == 0:
                     save_checkpoint(df, file.filename, index + 1)
                 
                 timing_info = {
                     "resume_no": index + 1,
+                    "api_key": f"KEY_{used_provider.value}",
                     "loading_time": loading_time,
                     "processing_time": processing_time,
                     "total_time": loading_time + processing_time
@@ -203,6 +212,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 extracted_data.append({
                     "resume_no": index + 1,
+                    "api_key": f"KEY_{used_provider.value}",
                     "data": response,
                     "parsed_city": city,
                     "parsed_yoe": yoe,
@@ -211,21 +221,27 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
 
             except Exception as e:
                 print(f"Error processing {link}: {str(e)}")
-                # Save checkpoint on error
                 save_checkpoint(df, file.filename, index + 1)
                 extracted_data.append({"link": link, "error": str(e)})
 
-        # Calculate timing statistics
+        # Calculate statistics
         total_time = time.time() - total_start_time
-        print(f"\nTotal processing time: {total_time:.2f} seconds")
         
         if timing_data:
             avg_loading_time = sum(t['loading_time'] for t in timing_data) / len(timing_data)
             avg_processing_time = sum(t['processing_time'] for t in timing_data) / len(timing_data)
-            print(f"Average loading time: {avg_loading_time:.2f} seconds")
-            print(f"Average processing time: {avg_processing_time:.2f} seconds")
+            
+            # Calculate key-specific stats
+            key_stats = {}
+            for key in GeminiProvider:
+                key_times = [t for t in timing_data if t['api_key'] == f"KEY_{key.value}"]
+                if key_times:
+                    key_stats[f"key_{key.value}"] = {
+                        "count": len(key_times),
+                        "avg_processing_time": sum(t['processing_time'] for t in key_times) / len(key_times)
+                    }
 
-        # Save final output
+        # Save output
         output_filename = f"enriched_{os.path.splitext(file.filename)[0]}.csv"
         output_path = os.path.join(OUTPUT_DIR, output_filename)
         df.to_csv(output_path, index=False)
@@ -238,6 +254,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 "total_time": total_time,
                 "average_loading_time": avg_loading_time if timing_data else None,
                 "average_processing_time": avg_processing_time if timing_data else None,
+                "key_statistics": key_stats if timing_data else None,
                 "detailed_timing": timing_data
             }
         }
@@ -245,6 +262,5 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        # Cleanup uploaded file
         if os.path.exists(file_path):
             os.remove(file_path)
