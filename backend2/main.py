@@ -6,7 +6,10 @@ import os
 from typing import List
 import time
 from enum import Enum
+
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_docling import DoclingLoader
 from dotenv import load_dotenv
@@ -57,7 +60,7 @@ async def process_with_gemini(pages: str, provider: GeminiProvider) -> tuple[str
     """Process text with specified Gemini API key."""
     api_key = os.getenv(f"GEMINI_API_KEY_{provider.value}")
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     prompt = f"""
     Extract the current city and years of experience (YOE) from the Input text using these rules:
@@ -90,7 +93,10 @@ async def process_with_gemini(pages: str, provider: GeminiProvider) -> tuple[str
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(prompt , safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    })
         return response.text, provider
     except Exception as e:
         print(f"Error with key {provider.value}: {str(e)}")
@@ -186,6 +192,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 # Process with rotating API keys
                 provider = get_next_provider(index)
+                print(provider)
                 llm_start_time = time.time()
                 
                 response, used_provider = await process_with_gemini(str(pages), provider)
