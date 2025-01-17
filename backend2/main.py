@@ -128,13 +128,13 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 pages = loader.load_and_split()
                 loading_time = time.time() - start_time
-                
-                # Write pages to a text file
-                text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
-                with open(text_file_path, "w") as text_file:
-                    for page in pages:
-                        text_file.write(page.page_content + "\n")
-                print(f"Pages written to {text_file_path}")
+
+                # # Write pages to a text file
+                # text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
+                # with open(text_file_path, "w") as text_file:
+                #     for page in pages:
+                #         text_file.write(page.page_content + "\n")
+                # print(f"Pages written to {text_file_path}")
                 
                 print(f"Loading time: {loading_time:.2f} seconds")
                 
