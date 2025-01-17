@@ -60,18 +60,6 @@ def save_checkpoint(df: pd.DataFrame, filename: str, checkpoint_number: int):
     df.to_csv(checkpoint_path, index=False)
     print(f"Checkpoint {checkpoint_number} saved: {checkpoint_path}")
 
-def load_latest_checkpoint(filename: str) -> tuple[pd.DataFrame, int]:
-    """Load the latest checkpoint if it exists."""
-    checkpoints = [f for f in os.listdir(CHECKPOINT_DIR) if f.endswith(filename)]
-    if not checkpoints:
-        return None, 0
-    
-    latest = max(checkpoints, key=lambda x: int(x.split('_')[1]))
-    checkpoint_number = int(latest.split('_')[1])
-    df = pd.read_csv(os.path.join(CHECKPOINT_DIR, latest))
-    print(f"Loaded checkpoint {checkpoint_number}: {latest}")
-    return df, checkpoint_number
-
 @app.post("/process_file")
 async def process_file_and_extract_links(file: UploadFile = File(...)):
     """
@@ -98,15 +86,9 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         if "resumelink" not in df.columns:
             raise HTTPException(status_code=400, detail="CSV must contain 'resumelink' column.")
 
-        # Check for existing checkpoint
-        checkpoint_df, start_index = load_latest_checkpoint(file.filename)
-        if checkpoint_df is not None:
-            df = checkpoint_df
-            print(f"Resuming from index {start_index}")
-        else:
-            start_index = 0
-            df['city'] = None
-            df['years_of_experience'] = None
+        start_index = 0
+        df['city'] = None
+        df['years_of_experience'] = None
 
         resume_links = df["resumelink"].dropna().tolist()
         extracted_data = []
@@ -128,15 +110,14 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 pages = loader.load_and_split()
                 loading_time = time.time() - start_time
-
-                # # Write pages to a text file
+                print(f"Loading time: {loading_time:.2f} seconds")
+                
+                #    # # Write pages to a text file
                 # text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
                 # with open(text_file_path, "w") as text_file:
                 #     for page in pages:
                 #         text_file.write(page.page_content + "\n")
                 # print(f"Pages written to {text_file_path}")
-                
-                print(f"Loading time: {loading_time:.2f} seconds")
                 
                 # Process with LLM
                 llm_start_time = time.time()
@@ -253,16 +234,3 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         # Cleanup uploaded file
         if os.path.exists(file_path):
             os.remove(file_path)
-
-#Testing Function
-@app.get("/ask-llm")
-async def ask_llm():
-    print("Hello endpoint") 
-    start_time = time.time()
-    chat_completion = client.chat.completions.create(
-        messages=[{"role": "user", "content": f"Use of Ai"}],
-        model="llama-3.2-1b-preview",
-    )
-    processing_time = time.time() - start_time
-    print(processing_time)
-    return {"data": chat_completion.choices[0].message.content}

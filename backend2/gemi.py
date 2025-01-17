@@ -40,9 +40,11 @@ app.add_middleware(
 
 UPLOAD_DIR = "uploads"
 OUTPUT_DIR = "processed"
+RESUME_DIR = "resumes"
 CHECKPOINT_DIR = "checkpoints"  # Directory for saving progress
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+os.makedirs(RESUME_DIR, exist_ok=True)
 os.makedirs(CHECKPOINT_DIR, exist_ok=True)
 
 def parse_llm_response(response: str) -> tuple:
@@ -107,15 +109,9 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         if "resumelink" not in df.columns:
             raise HTTPException(status_code=400, detail="CSV must contain 'resumelink' column.")
 
-        # Check for existing checkpoint
-        checkpoint_df, start_index = load_latest_checkpoint(file.filename)
-        if checkpoint_df is not None:
-            df = checkpoint_df
-            print(f"Resuming from index {start_index}")
-        else:
-            start_index = 0
-            df['city'] = None
-            df['years_of_experience'] = None
+        start_index = 0
+        df['city'] = None
+        df['years_of_experience'] = None
 
         resume_links = df["resumelink"].dropna().tolist()
         extracted_data = []
@@ -125,7 +121,7 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         
         for index, link in enumerate(resume_links[start_index:], start=start_index):
             try:
-                print(f"\nProcessing resume {index + 1}/{len(resume_links)}: {link}")
+                print(f"\nProcessing resume {index + 1}/{len(resume_links)}: {link} \n")
                 start_time = time.time()
                 
                 # Load document
@@ -138,7 +134,14 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 pages = loader.load_and_split()
                 loading_time = time.time() - start_time
-                print(f"Loading time: {loading_time:.2f} seconds")
+                print(f"Loading time: {loading_time:.2f} seconds \n")
+
+                #  # # Write pages to a text file
+                # text_file_path = os.path.join(RESUME_DIR, f"resume_{index + 1}.txt")
+                # with open(text_file_path, "w") as text_file:
+                #     for page in pages:
+                #         text_file.write(page.page_content + "\n")
+                # print(f"Pages written to {text_file_path}")
                 
                 llm_start_time = time.time()
 
@@ -184,22 +187,23 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 )
 
                 # Sending the actual prompt
-                response = chat.send_message(prompt)
-                print(response.text)
+                chat_response = chat.send_message(prompt)
+                print()
+                print(chat_response.text)
 
                 processing_time = time.time() - llm_start_time
                 print(f"LLM processing time: {processing_time:.2f} seconds")
                 
-                # response = chat_completion.choices[0].message.content
-                # city, yoe = parse_llm_response(response)
+                response = chat_response.text
+                city, yoe = parse_llm_response(response)
                 
-                # # Update DataFrame and save immediately
-                # df.loc[df['resumelink'] == link, 'city'] = city
-                # df.loc[df['resumelink'] == link, 'years_of_experience'] = yoe
+                # Update DataFrame and save immediately
+                df.loc[df['resumelink'] == link, 'city'] = city
+                df.loc[df['resumelink'] == link, 'years_of_experience'] = yoe
                 
                 # Save checkpoint at intervals
-                # if (index + 1) % checkpoint_interval == 0:
-                #     save_checkpoint(df, file.filename, index + 1)
+                if (index + 1) % checkpoint_interval == 0:
+                    save_checkpoint(df, file.filename, index + 1)
                 
                 timing_info = {
                     "resume_no": index + 1,
@@ -211,9 +215,9 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
                 
                 extracted_data.append({
                     "resume_no": index + 1,
-                    # "data": response,
-                    # "parsed_city": city,
-                    # "parsed_yoe": yoe,
+                    "data": response,
+                    "parsed_city": city,
+                    "parsed_yoe": yoe,
                     "timing": timing_info
                 })
 
@@ -256,15 +260,4 @@ async def process_file_and_extract_links(file: UploadFile = File(...)):
         # Cleanup uploaded file
         if os.path.exists(file_path):
             os.remove(file_path)
-
-@app.get("/ask-llm")
-async def ask_llm():
-    print("Hello endpoint") 
-    start_time = time.time()
-    chat_completion = client.chat.completions.create(
-        messages=[{"role": "user", "content": f"Use of Ai"}],
-        model="llama-3.2-1b-preview",
-    )
-    processing_time = time.time() - start_time
-    print(processing_time)
-    return {"data": chat_completion.choices[0].message.content}
+            
