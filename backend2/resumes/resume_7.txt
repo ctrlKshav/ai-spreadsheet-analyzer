@@ -1,0 +1,419 @@
+Nilima	Manohar	kale
+"
+	Currently	working	as	a	Software	professional	with	about	2.9	years	of	experience	in	testing	,working	on
+automation	tools	in	selenium	with	Java,	working	on	web	driver,testNG	
+tools	working	with	pharma
+companies	for	MES	and	Chemia	ELN	project	
+"
+	
+kalenilima03@gmail.com
+	
+7795215256
+Current	Designation:
+	
+test	automation	engineer
+Current	Company:
+	
+Laurus	Infosystems	Pvt	Ltd
+Current	Location:
+	
+Pune
+Pref.	Location:
+	
+Pune
+Functional	Area:
+	
+Engineering	-	Software
+Role:
+	
+Test	Analyst
+Industry:
+	
+IT	Services	&	Consulting
+Key	Skills:
+	
+Manual	Testing,	Automation	Testing	in	selenium,
+Testng,	HTML,	Java,	Performance	Testing,	Load	Testing,
+JUnit,	Selenium,	Functional	Testing,	MySQL,	JMeter,	Maven,
+Agile	Methodology,	Web	Application	Testing
+Total	Experience:
+	
+2	Year(s)	9	Month(s)
+Annual	Salary:
+	
+Rs	4.7	Lakhs
+Expected	CTC:
+	
+Not	Mentioned
+Highest	Degree:
+	
+B.Tech/B.E.
+Notice	period:
+	
+15	Days	or	less
+Work	Experience
+Laurus	Infosystems	Pvt	Ltd
+	
+(Current	Employer)
+test	automation	engineer
+	|	
+Aug	2015
+selenium	automation	testing,	TestNG,java,Testing	and	validation	group	
+,working	on	selenium	
+automation	tools,	manual	testing,
+functional	testing,	performance	testing	creating	test	cases	,	executing	test	cases,generate	the	report	in	Excel	sheet,	working	on
+data	drivven	freamwork	,	hybrid	freamwork	Apache	jmeter,	Designing	FTS	and	FT,agile	testing
+Notice	Period	:	15	Days	or	less
+Education
+Undergraduates	
+(	
+Full	Time	
+)
+B.Tech/B.E.	
+(Computers)
+SGGS	College	of	Engineering	&	Technology,	Nanded	
+|	in	2015
+IT	Skills
+Skill	Name
+Version
+Last	Used
+Experience
+JAVA
+1.8
+2018
+5	Years	5	Months
+Database
+2017
+SELENIUM
+3.4.0
+2018
+2	Years	8	Months
+TESTNG
+6.9.0
+2017
+2	Years
+Manual	functional	Testing
+latest
+2017
+2	Years
+Functional	Testing
+2007
+Manual	functional	Testing
+Automation	Testing
+PERFORMANCE	TESTING
+TESTNG
+latest
+2018
+2	Years	8	Months
+Language	Known
+Language
+Proficiency
+Read
+Write
+Speak
+english
+Proficient
+hindi
+Proficient
+marathi
+Expert
+Projects
+SMART	MES
+Macro	lab,	Hetero	,Laurus	lab,Bliss	GVS	Mumbai	|	Offsite	|	Full	Time	|	from	Aug	2015	to	Apr	2018
+Bangalore
+Skill	Used:
+	Core	Java,	Selenium,	testng,XHTML,	DBMS,	Software	Development,	functional	testing,	performance	testing
+Team	Size:
+	7
+Role	:
+	Quality	Analyst
+Role	Description:
+	Testing	&	Validation	Group
+Project	Details:
+	1)Manufacturing	Execution	System	helps	you	achieve	the	regulatory	compliance,	consistent	quality	and	high
+productivity.	
+2)It	helps	you	in	handling	the	batch	manufacturing	records	and	batch	quality	deviations.	3)	I	worked	on	QC(Quality
+control)	module	as	a	Java	developer	and	font	end	and	back	end	developer.	4)	currently	working	as	automation	tester	and	using
+selenium	and	testng	tools
+Chemia	ELN
+Laurus	Labs,Micro	lab,Hetero	|	Onsite	|	Full	Time	|	from	Aug	2015	to	Apr	2018
+Bangalore
+Skill	Used:
+	selenium	automation	testing	tools	and	Testng	tools,	jmeter	for	performance	testing.
+Team	Size:
+	6
+Role	:
+	Test	Engineer
+Role	Description:
+	automation	tester
+Project	Details:
+	chemia	is	a	project	for	pharma	Industry	to	work	on	analytical,	formulation	and	API	and	admin	module	
+I	almost
+work	on	every	module	as	a	automation	tester.
+Other	Details
+Personal	Detail
+Date	of	Birth:
+	
+05	May	1993	
+Gender:
+	
+Female	
+Marital	Status:
+	
+Single/unmarried
+Address:
+gajanan	nagar,	pimpalgaon	road,	yavatmal	445001
+445001
+Home	Town:
+	
+yavatmal
+Desired	Job	Details
+Job	Type:
+	
+Permanent	
+Employment	Status:
+	Full	Time
+Work	Authorization
+US	Work	Status:
+	
+Have	H1	Visa	
+Countries:
+	
+Australia
+Affirmative	Action
+Category:	
+OBC-	Creamy	
+Physically	Challenged:
+	
+No
+Attached	Resume
+Nilima	Kale
+E-Mail:	kalenilima03@gmail.com
+Tel.	(Mobile):	7795215256
+SNAPSHOT
+
+	
+Over	2.9	years	of	experience	in	Software	Testing	working	with	Laurus	InfoSystem	Pvt.
+Ltd.	Seeking	optimum	utilization	of	acquired	skills	in	the	areas	of	software	testing,
+development	and	quality	assurance.
+
+	
+Experience	in	working	with	Manual	Testing.	Worked	on	Planning,	Execution,	end	to	end
+test	delivery.	Experience	in	working	on	Data	driven	framework,	keyword	driven
+framework,	hybrid	driven	framework	and	POM	(page	Object	Model)	framework,
+knowledge	of	REST	and	SOAP	web	services.	Knowledge	on	TestNG	Annotation.	Hands	on
+experience	in	HTML/CSS,	Java,	SQL	server.	MySQL,	C/C++,	with	working	knowledge	from
+the	current	organization.
+
+	
+Currently	working	as	an	automation	tester	in	same	company	to	use	my	Java	skills	in
+Selenium	automation	analyze	automation	and	functional	requirements	Strong
+experience	and	capabilities	in	creating,	maintaining	and	executing	automated	test
+scripts.
+
+	
+Responsible	for	Functional	Testing,	Smoke	Testing,	Integration	testing,	System	testing,
+and	Regression	Testing,	Black-box	Testing,	Script	execution	and	Maintenance.
+Demonstrate	experience	with	exploratory	testing.
+
+	
+Strong	technical	knowledge	for	Selenium	automation	and	TestNG	tools	Junit	,and
+Jeera,Cucumber	knowledge	of	Apache	Jmeter	tools	for	performance	testing.
+
+	
+Experienced	in	training	and	mentoring	team	members	with	product	knowledge	and
+business	processes	Create	and	distribute	QA	status	reports,	test	closure	reports.
+Managed	a	group	of	testers	and	coordinated	with	developers	and	peers	to	provide	an
+end-to-end	testing	solution.
+
+	
+Performing	Functional	Testing,	End	to	End	testing.
+
+	
+Good	understanding	of	Software	development	life	Cycle	and	good	experience	in	Test
+Life	Cycle,	and	defect	management.	Acquire	a	good	set	of	Communication,
+Presentations	Skills,	Analytical	Skills,	Problem	Solving,	Self-Motivated,	Definite	abilities
+in	leadership.
+
+	
+Collaborating	with	the	team	on	release	planning,	sprint	planning,	scoping,	and	engaging
+with	customers.
+
+	
+Good	experience	in	creating	test	scripts	with	internal	framework	using	Selenium	Web
+driver,	web	based	application.
+
+	
+Visited	Client	place	to	install	server	at	Bliss	GVS	Mumbai,	Laurus	Lab,Micro	Lab	for	IQ
+and	OQ	implementation	of	Chemia	(ELN)project.
+CORE	COMPETENCIES
+
+	
+Ability	to	acquire	new	skills	within	short	time	scales,	adapt	to	rapidly	changing	work
+practices	and	build	and	maintain	excellent	working	relationships	with	colleagues.
+
+	
+Good	understanding	of	Agile	and	Waterfall	methodology.
+
+	
+Strong	communication	and	organizing	skills	matched	with	the	ability	to	manage	stress
+and	time	effectively.
+
+	
+Proactive	and	passionate	learner,	able	to	grasp	new	technologies	quickly.
+Technical	Skill	Set:
+Programming	Languages	Java,	C,	C++
+Environment	
+Windows	Vista,	Windows	7,	Windows	8
+Tools	
+Selenium	Webdriver,	Eclipse,
+Version	Control	
+SVN
+Databases	
+SQL	Server,	MySQL
+Domain	knowledge	
+Pharmaceutical	Software	Services
+Framework	
+Yii	framework,	POM	Selenium	Framework,
+,Junit,Apache	Jmeter
+Web	Designing	
+HTML,	Wordpress
+ACADEMIC	CREDENTIALS
+B.tech	in	Information	Technology	from	SGGS	Nanded	(Maharashtra),	in	2015	with	7.37	CGA
+Polytechnic	in	Computer	Science	from	GRWPY	Yavatmal	(Maharashtra)	in	2012	with	79.55	%
+SSC	from	New	English	High	school	Ralegaon.	With	83.53%
+EMPLOYMENT	PROFILE
+Name	of	the	organization:	Laurus	InfoSystems	Pvt	Ltd
+Duration:	August	2015	–	Till	date
+Designation:	Engineer	Grade-2
+Branch:	Professional	Services	Division
+Project:	
+Chemia	ELN	(Electronic	Lab	Notebook)	(International	Project)
+Client:	
+Laurus	Labs,	Micro	labs,	Shilpa	Medicare,	Hetero
+Duration:	
+Aug	2017	-	Present	(Manual	Tested	project)
+Role/	
+
+	
+Automation	in	selenium,	Prepared	Test	Scripts,	induction	manuals
+Responsibilities:	
+for	the	end	users.	Monitored	the	Test	Process,	handled	developer
+queries,	End	to	end	testing.
+
+	
+Analyzing	the	Requirements	from	the	client,	participating	in
+preparing	Test	Plans.
+
+	
+Collected	the	queries	related	to	the	requirements	from	testing
+team	and	got	them	resolved	by	the	Business	analysts,
+Development	Team.
+Technologies	
+Automation	Testing,	Manual	Testing,	MySQL,	Functional	testing
+Used:
+Project:	
+MES	(Manufacturing	execution	system)	(International	Project)
+Clients:	
+Laurus	Labs
+Duration:	
+Aug	2015	-	present	(Automated	Tested	project)
+Role/	
+
+	
+Worked	on	analysis	of	the	scope	and	coverage	of	requirements
+Responsibilities:	
+specified	in	business	requirement	document.
+
+	
+Worked	on	Functional	Testing,	System	Testing	and	Compatibility
+Testing.
+
+	
+Defect	Reporting	and	Tracking	using	and	PBN	Tool.
+
+	
+Created	Status	and	Defect	reporting	as	per	the	client	requirements.
+
+	
+Conducted	Review	Meetings	within	the	Team.
+
+	
+Working	in	Automation	Team	in	creating	Test	Scripts.
+Technologies	Used:	
+Selenium,	TestNG,	My	SQL	&	Manual	Testing,	Functional	testing
+Project:	
+Character	Certificate	Online	Generation.
+Client:	
+Nanded	district	police
+Duration:	
+Sep	2014	-	Mar	2015
+Role/	
+
+	
+Character	certificate	online	generation	is	such	a	software
+Responsibilities:	
+application	developed	In	Yii	framework	and	used	XAMPP	is	a	free
+and	open	source	web	server	for	Nanded	district	SP	office	to
+generate	character	certificate	online.
+
+	To	help	Nanded	district	police	officers	and	all	police	station	to	store
+their	data	in	a	database	and	avoid	manual	work.
+
+	My	work	is	for	Nanded	district	police	to	create	simple	application	in
+easy	way.
+Technologies	
+PHP,	Yii	framework,	XAMPP	web	server
+Used:
+Project:	
+SQL	Interpreter
+Client:	
+GRWPY	collage
+Duration:	
+Sep	2011	-	Apr	2012	(Database	development	project)
+Role/	
+
+	
+SQL	interpreter	is	such	a	software	application	developed	which	it	is
+Responsibilities:	
+providing	the	user	friendly	interface	for	accessing	the	database	for
+such	person	who	is	having	very	less	knowledge.
+
+	
+About	the	SQL	queries	like	students,	SQL	beginners,	SQL
+Interpreter	gives	you	the	ability	to	use	the	simple	graphical
+interface	to	build	SQL	statements	and	create	view	in	a	database.
+Technologies	
+Java,	SQL	server	2008,
+Used:
+AWARDS	AND	RECOGNITIONS
+
+	
+Received	continuous	appreciations	from	client	for	effective	and	timely	testing	of	the
+requirements.
+
+	
+Recognized	by	peers	and	onshore/offshore	leads	from	time	to	time	for	demonstrating
+the	good	leadership,	coordination	and	for	the	knowledge	imparted	to	other	team
+members.
+PERSONAL	INFORMATION
+Date	of	birth:	
+05-05-1993
+Languages	Known:	
+English,	Hindi,	and	Marathi
+Email	address:	
+kalenilima03@gmail.com
+Nationality:	
+Indian
+Gender:	
+Female
+Current	Location:	
+Pune
+Phone	Number:	
+7795215256
+EDUCATIONAL	&	PROFESSIONAL	CREDENTIALS:
+1.	Trainings	Undertaken:	Testing	Fundamentals,	21	CFR	11	(Code	of	federal	regulation)
+DECLARATION:
+I	do	hereby	declare	that	the	above	particulars	furnished	by	me	are	true	and	correct	to	the	best
+of	my	knowledge	and	belief.
+(Nilima	kale)

@@ -1,0 +1,125 @@
+CURRICULUM VITAE
+Sunag .S. S							Phone No: 9964164329
+Email Id: sunag.shetty@gmail.com
+Professional Summary:
+Having 6+ Years of experience in developing and maintaining the Web, Client/Server
+Applications using Java and J2EE Technologies
+Strong technical and Experience in Object Oriented Programming Concepts.
+Good experience in Core Java, Servlets, JSP
+Experience in exposing and consuming REST based web services
+Strong Experience in database management with JDBC
+Knowledge on writing JUnit tests and Mockito.
+Experience in Spring MVC, Spring Batch & Hibernate ORM
+Experience in JSON
+Experience in AngularJS
+Experience in Dropwizard
+Experience in SQL & PL/SQL
+Knowledge on BPMN-Business Process Model & Notation
+Experience in configuring and deploying Web Applications using Tomcat server
+Experience in web application development using IDE like Eclipse and IntelliJ IDEA
+Successfully developed & implemented various Banking (Capital Market & Accounting services) Requirements per client needs
+Committed team player with strong analytical and problem solving skills, and ability to quickly adapt to new environments and technologies
+Excellent team member possessing good communication and interpersonal skills.
+Skills:
+Programming/Scripting Languages: Java, JSP, Servlets, HTML, JavaScript and Angular JS & Unix Shell Scripting
+Framework/ORM:  Hibernate, Spring MVC, Spring Batch.
+Database:  Oracle 11g, Sybase & DB2
+Application/Web Servers:  Apache Tomcat, Jetty
+IDE: Eclipse & IntelliJ
+Operating System: Win XP/7, UNIX
+Tools: JIRA, Aqua Studio, Toad, SOAP UI, Autosys , Control-M
+UML Modeling: Microsoft Visio, Gliffy
+Academic Details:
+Matriculation from Sri Satya Sai Academy of Integrated Education, Bhadravathi in 2005 with 91.4%.
+PUC in Science from Sri Aurobindo Pre-University (I) college, Shimoga in 2007 with 86.5%.
+Bachelor Degree in Computer Science and Engineering from Bapuji institute of Engineering and Technology, Davanagere in 2011 with 73.6%.
+Masters in Software Systems (M. Tech) from BITS Pilani WILP in 2014 with 7.6 CGPA.
+Experience Summary:
+Working as Technology Analyst at Infosys Limited from Oct 2015 to till date                  Client Location: Goldman Sachs, Bangalore
+Worked as Senior Software Engineer at HCL Technologies Ltd from Jul 2011 to Sep 2015
+Major Assignments:
+ASSIGNMENT -5
+Name              :  eDocs- Invoice Life Cycle Tracker Application
+Period		: Apr 2016 to till date
+Client   	: Goldman Sachs
+Environment	: AngularJS, Restful web services, HTML, DB2 & Sybase database, Mockito, Spring Batch, BPMN, KOFAX & Onbase (Document Management Systems), Unix Shell script & Autosys
+Description:
+The goal of this project is to be able to provide a viable alternative to the ONBASE vendor product based invoicing data flow using advance tech platform solutions and internal platforms for workflow management and document management. The hardcopy of the invoice is scanned and the important metadata are validated, the content and metadata is pushed to file system & DB via connector. The metadata along with the invoice contents will be made available to set restricted set of users via an UI where users can view, update the comments and even attach supporting doc for same.
+Responsibilities:
+Involved in the requirement analysis and design.
+Involved in the development
+Involved in designing UI pages.
+Involved in developing business logic & exposing/consuming services.
+Involved in parsing the wide variety of feeds received from upstream users/systems.
+Involved in writing SQL Queries as part of Historical migration from older vendor product to new system.
+Involved in deploying and testing the application.
+Involved in creation of shell scripts for performing FTP feeds to external systems or for consuming feeds from upstream, to trigger the Spring batch via shell script and to perform recon on the invoices.
+ASSIGNMENT- 4
+Name              :  Flexible Work Arrangement
+Period		: Dec 2015 to Mar 2016
+Client   	: Goldman Sachs
+Environment	: AngularJS, Restful web services, HTML, Sybase, Mockito, Soap web services
+Description:
+Employees are eligible to apply for FWAs during their period of active employment or while on leave. An FWA is any variation to an employee's working ours and/or work location that provide an opportunity to ensure that business objectives as well as personal needs can be met through creative ways of working.
+Responsibilities:
+Involved in the requirement analysis and design.
+Involved in the development
+Involved in designing UI pages.
+Involved in developing business logic
+Involved in parsing and getting the data from the databases.
+Involved in writing SQL Queries.
+Involved in deploying and testing the application.
+Involved in creation of database tables
+ASSIGNMENT- 3
+Name              :  dbIQ- OPEX Application
+Period		: Jun 2015 to Sep 2015
+Client   	: Deutsche Bank
+Environment	:  Java, j2ee, Oracle10g, JSP, Spring MVC, JSON, Angular JS
+Description:
+The dbIQ-APEX application provides generic upload functionality platform for any of the selected database table. dbIQ is an investment banking application consisting on huge data manipulation. There are many data source like Reuters, Bloomberg etc from where data will be captured to our database and intern data will be published. There are many scenarios where data will be provided manually by Business and Traders. OPEX is and web based application which reads the huge data in Excel provided by those Business/traders and stores it in respective table in our database.
+OPEX is a kind of automation which reduces the effort manually inserts.
+Responsibility:
+Creating the database and tables
+Involved in Analyzing the rrequirement, designing and implementing functionality using various technology.
+Giving transition for others in both technology and business logic.
+Involved in Client interaction for obtaining data formats and sign off.
+ASSIGNMENT -2
+Name              :  dbIQ- Data Service Application
+Period		: Dec 2014 to May 2015
+Client   	: Deutsche Bank
+Environment	:  Java, Spring MVC, Oracle10g, Oracle Coherence, RESTful WS
+Description:
+The Data Service project has been designed to provide a responsive and scalable platform for providing DBIQ Index data to individuals, teams and applications within Deutsche Bank. It has been implemented as a ‘RESTful’ web service, providing data in various formats. This is built on top of a clustered Coherence caching solution to improve performance over the database. A preload facility is included, which can be configured if necessary.
+All the items of data provided can be obtained in any of the following formats, by appending the appropriate suffix to the end of the URL:
+*.html -- a basic xhtml representation, intended for general users of the service
+*.xml – an xml format, intended for downstream system consumers to retrieve data in a standard and (schema available)
+*.sdos -- a results object in the DBAnalytics SDOS format, intended for users of the Excel DBAnalytics plugin to import data directly into excel
+Responsibility:
+Involved in analyzing the requirement and coding to implement the end user specified format functionality.
+Involved in implementing the load balancer using Round robin scheduling algorithm in order to process request on data service.
+Giving Involved in migrating the application from Physical server to VHS(Virtualization Host Server).
+Involved in Client interaction for obtaining data formats and sign off.
+ASSIGNMENT-1
+Name              :  dbIQ-Deutsche Bank Index Quant
+Period		: Dec 2011 to Nov 2014
+Client   	: Deutsche Bank
+Environment	:   Java, J2ee, Oracle10g & shell script
+Description:
+The Project is based on developing indices. The indices involved are for commodities, bonds, derivatives and equity. For these indices we understand the strategic algorithms involved in developing an index, since each index has a different strategic algorithm. The code is written for these algorithms and calculation of an index is done. There are various other parameters to for developing an index, all these are carefully understood and an automation product is developed which can generate the index level. Downloading and Publishing the data to different sources like Reuters, Bloomberg and other external databases. This application generates dynamic reports for the managers by using the static data and daily upload data.
+a) Development of Indices of equities, Bonds, FX, Commodities etc.
+b) Publishing the data to external sources like Reuters, Bloomberg etc.
+c) Sanity checks framework to keep the checks to the upper and lower bound of index levels.
+Responsibilities:
+Involved in Analyzing the Requirement and implementing functionality using various technology.
+Giving transition for others in both technology and business logic.
+Involved in development and enhancements.
+Involved in Bug Fixing.
+Involved in Client interaction for obtaining sign-off, gap analysis.
+Involved in Service requests and Incidents.
+Personal Details:
+Fathers Name	- Shashi Kumar S.K
+Gender	            - Male
+Marital Status	- Married
+Nationality	            - Indian
+DOB     	            - 13th September 1989
+PLACE:   Bangalore                                                                  			Sunag. S. S
