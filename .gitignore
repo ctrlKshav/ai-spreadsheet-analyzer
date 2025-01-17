@@ -1,2 +1,5 @@
 ﻿backend2/.env
 backend2/.venvi2/
+backend2/resumes/
+backend2/checkpoints/
+backend2/processed
